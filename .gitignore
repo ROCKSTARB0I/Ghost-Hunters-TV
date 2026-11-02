@@ -1,0 +1,5 @@
+# never upload: real photos and their local face settings
+media/scares/real.*
+media/scares/faces.local.json
+*.HEIC
+.DS_Store

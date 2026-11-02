@@ -1,0 +1,15 @@
+{
+  "_help": "Jumpscare faces. Every ghost uses a painted face; faces.local.json (kept on this computer, never uploaded) can swap in a real photo.",
+  "edith": {
+    "drawn": true
+  },
+  "pete": {
+    "drawn": true
+  },
+  "clank": {
+    "drawn": true
+  },
+  "gloop": {
+    "drawn": true
+  }
+}
