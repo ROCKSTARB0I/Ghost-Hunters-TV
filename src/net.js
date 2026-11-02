@@ -9,9 +9,10 @@ export class Net {
   // came from one, or — when played from GitHub Pages — the address the
   // Server Control panel publishes to server.json in the game's repo
   async base() {
-    const meta = document.querySelector('meta[name="ght-server"]')?.content;
+    const meta = document.querySelector('meta[name="ght-server"]')?.content || window.ghostHuntersDesktop?.server;
     if (meta) return meta.replace(/\/$/, '');
-    if (!location.hostname.endsWith('github.io')) return location.origin;
+    const hosted = location.hostname.endsWith('github.io') || location.hostname === 'play.ghosthunters';   // GitHub Pages or the .exe
+    if (!hosted) return location.origin;
     const tries = ['https://api.github.com/repos/ROCKSTARB0I/Ghost-Hunters-TV/contents/server.json?ref=main', 'https://raw.githubusercontent.com/ROCKSTARB0I/Ghost-Hunters-TV/main/server.json?t=' + Date.now()];
     for (const u of tries) {
       try {
