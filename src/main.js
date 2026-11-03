@@ -173,7 +173,7 @@ class Game {
   }
   hostShow() { this.connect(() => this.net.send({ t: 'create', name: this.ui.name, look: { i: this.lookI } })); }
   joinShow(code, as) { this.connect(() => this.net.send({ t: 'join', code, as, name: this.ui.name || 'Viewer', look: { i: this.lookI } })); }
-  async listShows(cb) { try { await this.net.connect(); this.net.on('shows', (m) => cb(m.list)); this.net.send({ t: 'shows' }); } catch { cb(null); } }
+  async listShows(cb) { try { await this.net.connect(); this.net.on('shows', (m) => cb(m.list)); this.net.send({ t: 'shows' }); } catch (e) { cb(null, e.message); } }
   soloShow() {
     this.offline = true; this.net.id = 1; this.net.code = 'SOLO'; this.net.kind = 'crew'; this.net.open = false;
     this.net.roster = { director: 1, phase: 'lobby', settings: { minutes: 10 }, members: [{ id: 1, name: this.ui.name, kind: 'crew', look: { i: this.lookI } }] };

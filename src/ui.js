@@ -65,9 +65,9 @@ export class UI {
     };
     el.querySelectorAll('.mlist [data-a]').forEach(b => b.onclick = () => act[b.dataset.a]());
     if (this.pre) { openCode(this.pre.kind); el.querySelector(`.codein[data-for="${this.pre.kind}"] input`).value = this.pre.code; this.pre = null; }
-    this.g.listShows((list) => {
+    this.g.listShows((list, why) => {
       const box = $('#m-shows', el); if (!box) return;
-      if (list === null) { box.innerHTML = '<p>Can\'t reach the show server from this browser. Solo still works.</p>'; return; }
+      if (list === null) { box.innerHTML = `<p>${esc(why || 'Can\'t reach the show server.')} Solo still works.</p>`; return; }
       if (!list.length) { box.innerHTML = '<p>Server is online. Host a show, or ask a friend for their 4-letter code and press JOIN.</p>'; return; }
       box.innerHTML = list.map(s => `<div class="showrow"><div><b>${esc(s.director)}'s show</b><span>${s.code} · ${s.phase === 'lobby' ? 'pre-show' : 'live'} · ${s.crew} crew · ${s.audience} watching</span></div>${s.phase === 'lobby' ? `<button class="mini" data-j="${s.code}">JOIN</button>` : ''}<button class="mini" data-w="${s.code}">WATCH</button></div>`).join('');
       box.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { if (need()) this.g.joinShow(b.dataset.j, 'crew'); });
@@ -167,8 +167,9 @@ export class UI {
       ${g.isDirector ? `<div class="len">MAP ${Object.entries(MAPS).map(([id, M]) => `<button class="mini ${(g.net.roster.settings?.map || 'diner') === id ? 'on' : ''}" data-map="${id}" title="${M.blurb}">${M.name.toUpperCase()}</button>`).join('')}</div>` : `<div class="len">MAP: ${(MAPS[g.net.roster.settings?.map] || MAPS.diner).name.toUpperCase()}</div>`}
       ${g.isDirector ? `<div class="len">SHOW LENGTH ${[6, 10, 15].map(n => `<button class="mini ${(g.net.roster.settings?.minutes || 10) === n ? 'on' : ''}" data-min="${n}">${n} MIN</button>`).join('')}</div>` : ''}
     </div>`);
-    const base = location.origin + location.pathname;
-    const copy = (t, b) => navigator.clipboard?.writeText(t).then(() => { const o = b.textContent; b.textContent = 'COPIED!'; setTimeout(() => b.textContent = o, 1200); }).catch(() => prompt('Copy this:', t));
+    // friends join from the web copy; the launcher's own address only works inside the launcher
+    const base = /\.ruffdogs\.game$|^play\.ghosthunters$/.test(location.hostname) ? 'https://rockstarb0i.github.io/Ghost-Hunters-TV/' : location.origin + location.pathname;
+    const copy = (t, b) => { g.hud.toast(`Show code: ${g.net.code}. Friends press JOIN A SHOW and type it in (or open ${t}).`, 6000); Promise.resolve(navigator.clipboard?.writeText(t)).then(() => { const o = b.textContent; b.textContent = 'COPIED!'; setTimeout(() => b.textContent = o, 1200); }).catch(() => {}); };
     $('#l-leave', el).onclick = () => g.offline ? (g.offline = false, location.reload()) : g.leaveShow();
     $('#l-invite', el).onclick = (e) => copy(`${base}?join=${g.net.code}`, e.target);
     $('#l-watch', el).onclick = (e) => copy(`${base}?watch=${g.net.code}`, e.target);

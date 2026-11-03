@@ -15,7 +15,7 @@ from urllib.parse import urlparse, unquote
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 9730
 MAX_CREW, MAX_AUDIENCE = 8, 96
-WS_GUID = '258EAFA5-E914-47A5-95CA-C5AB0DC85B11'
+WS_GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 CODE_CHARS = 'BCDFGHJKLMNPQRSTVWXZ'
 
 lock = threading.RLock()
