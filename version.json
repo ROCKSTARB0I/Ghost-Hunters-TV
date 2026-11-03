@@ -1,5 +1,5 @@
 {
- "version": 2,
+ "version": 3,
  "files": {
   "index.html": "445569faaf21f4a4ea9fc5ef6f9d05b6a085c656",
   "style.css": "e7b484e03b2d7a988919ddf141b8151417751295",
@@ -14,7 +14,7 @@
   "src/input.js": "a465584f33a67002c547a64cf31c8516056b8cfd",
   "src/lobby.js": "32903a80d18096f4c3adeee8d588cd5b298e1cbb",
   "src/main.js": "146c1b02b78adb6401cfd7df5be57094593c6e81",
-  "src/net.js": "3a819a90f7d59521e49278b00f766bd3c4a24521",
+  "src/net.js": "8888d342e60dd95d72c68fc6be92bed593217d66",
   "src/player.js": "623be9918579b55e2ad0efc149c8e4b82f9d22ef",
   "src/room.js": "583f68c4a2e7932c5a65dda007a6beb788739c87",
   "src/scareface.js": "3542b3205dfdd6faa59500b2462730cf660a1a39",

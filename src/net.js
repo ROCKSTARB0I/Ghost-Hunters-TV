@@ -11,7 +11,7 @@ export class Net {
   async base() {
     const meta = document.querySelector('meta[name="ght-server"]')?.content || window.ghostHuntersDesktop?.server;
     if (meta) return meta.replace(/\/$/, '');
-    const hosted = location.hostname.endsWith('github.io') || location.hostname === 'play.ghosthunters';   // GitHub Pages or the .exe
+    const hosted = location.hostname.endsWith('github.io') || location.hostname === 'play.ghosthunters' || location.hostname.endsWith('.ruffdogs.game');   // GitHub Pages, the .exe or the Ruff Dogs Launcher
     if (!hosted) return location.origin;
     const tries = ['https://api.github.com/repos/ROCKSTARB0I/Ghost-Hunters-TV/contents/server.json?ref=main', 'https://raw.githubusercontent.com/ROCKSTARB0I/Ghost-Hunters-TV/main/server.json?t=' + Date.now()];
     for (const u of tries) {
