@@ -98,7 +98,7 @@ class Game {
   }
 
   async boot() {
-    this.world = new World(this.scene).build();
+    this.world = new World(this.scene).build('diner'); this.applyLook();
     this.lobby = new Lobby(this);
     this.room = new Room(this);
     this.room.makeButtons(AUDIENCE);
@@ -211,7 +211,7 @@ class Game {
     if (!cam) cam = hunters.find(m => m.id === this.net.id) || hunters[0];
     for (const m of hunters) roles[m.id] = hunters.length === 1 ? 'solo' : m === cam ? 'camera' : 'host';
     const type = ghost?.look?.gt || this.net.roster.settings?.ghostType || Object.keys(GHOST_TYPES)[Math.floor(Math.random() * 4)];
-    const m = { t: 'start', roles, ghost: { id: ghost ? ghost.id : 0, type }, minutes: this.net.roster.settings?.minutes || 10, seed: Math.random() * 1e9 | 0 };
+    const m = { t: 'start', roles, map: this.net.roster.settings?.map || 'diner', ghost: { id: ghost ? ghost.id : 0, type }, minutes: this.net.roster.settings?.minutes || 10, seed: Math.random() * 1e9 | 0 };
     if (!this.offline) { this.net.send({ t: 'phase', phase: 'live' }); this.net.send(m); }
     this.beginEpisode(m);
   }
@@ -219,8 +219,10 @@ class Game {
   beginEpisode(m) {
     this.ui.clear(); this.state = 'live'; this.startInfo = m;
     this.roles = m.roles; this.ghostInfo = { ...m.ghost };
+    if (this.world.mapId !== (m.map || 'diner')) { this.hideMenuScene(); this.world.build(m.map || 'diner'); }
+    this.applyLook();
     this.show.reset(m.minutes);
-    this.ghost.setType(m.ghost.type); this.ghost.ecto = 100; this.ghost.captured = false; this.ghost.manifest = 0; this.ghost.pos.set(38, groundY(38, -40) + 1, -40); this.ghost.ctrl = m.ghost.id ? 'player' : 'ai';
+    this.ghost.setType(m.ghost.type); this.ghost.ecto = 100; this.ghost.captured = false; this.ghost.manifest = 0; this.ghost.pos.copy(this.world.spots.ghost); this.ghost.ctrl = m.ghost.id ? 'player' : 'ai';
     for (const s of this.slimes) this.scene.remove(s.m); this.slimes = [];
     this.gore.clear(); if (this.body.exploded) this.makeBody(this.lookI);
     for (const c of this.chickens) this.scene.remove(c.m); this.chickens = [];
@@ -230,7 +232,7 @@ class Game {
     else if (m.roles[me]) {
       p.mode = 'crew'; p.role = m.roles[me]; this.place = 'world';
       const i = Object.keys(m.roles).indexOf(String(me)), van = this.world.spots.van;
-      p.pos.set(van.x + 2 + (i % 4) * 1.2, 0.25, van.z + 1.5 + Math.floor(i / 4)); p.yaw = -Math.PI / 2; p.pitch = -0.05;
+      p.pos.set(van.x + (i % 4) * 1.2, van.y, van.z + Math.floor(i / 4) * 1.2); p.pos.y = this.world.floorAt(p.pos.x, p.pos.z, van.y + 1); p.yaw = -Math.PI / 2; p.pitch = -0.05;
       p.cam.selfie = p.role === 'solo'; if (p.role === 'solo') p.yaw += Math.PI;
       this.hud.setMode(p.isCamera ? 'camera' : 'host');
     } else { p.mode = 'room'; this.place = 'room'; p.pos.copy(this.room.spawn); p.yaw = 0; this.hud.setMode('room'); }
@@ -242,6 +244,9 @@ class Game {
       p.mode === 'ghost' ? `${gt.blurb} Scare them. Yeet them. Don't get vacuumed.` : p.mode === 'room' ? 'Watch the TV, mess with the crew from the vote board, call them on the phone.' : `Tonight's ghost: ${gt.name}. Film it, vacuum it, survive.`);
     if (!this.voice.mic && p.mode !== 'room') this.voice.enableMic();
   }
+
+  // fog + sky light for the loaded map
+  applyLook(L = this.world.look) { const f = this.scene.fog; f.color.set(L.fog); f.near = L.near; f.far = L.far; this.gfx.hemi.intensity = L.hemi; this.gfx.moon.intensity = L.moon; }
 
   leaveLive() {
     this.hud.setMode(null); this.input.release();
@@ -504,7 +509,7 @@ class Game {
   // over the host's shoulder, the intern sees her first, she yells BOO,
   // everybody flails, she vanishes in a puff, and the host carries on.
   menuScene() {
-    const c = new THREE.Vector3(-37.2, 0, -5.4), y = this.world.floorAt(c.x, c.z, 1) + 0.02;
+    const c = this.world.spots.menu.clone(), y = this.world.floorAt(c.x, c.z, 1) + 0.02;
     const host = new Dude({ style: 'bobble', skin: 0xe8a878, shirt: PAL.red, pants: 0x2a2a4a, hair: true, hairColor: 0x3a2010 });
     const intern = new Dude({ style: 'lanky', skin: 0xffcfa8, shirt: PAL.yellow, pants: 0x1a1a2a, hat: 'beanie', hatColor: PAL.blue });
     host.group.position.set(c.x, y, c.z); host.group.rotation.y = 0.05;                 // facing the camera

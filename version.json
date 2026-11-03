@@ -1,5 +1,5 @@
 {
- "version": 3,
+ "version": 4,
  "files": {
   "index.html": "445569faaf21f4a4ea9fc5ef6f9d05b6a085c656",
   "style.css": "e7b484e03b2d7a988919ddf141b8151417751295",
@@ -13,7 +13,8 @@
   "src/hud.js": "35fa1f1fe8e8ff3c692592cfad3305ff78a2d93a",
   "src/input.js": "a465584f33a67002c547a64cf31c8516056b8cfd",
   "src/lobby.js": "32903a80d18096f4c3adeee8d588cd5b298e1cbb",
-  "src/main.js": "146c1b02b78adb6401cfd7df5be57094593c6e81",
+  "src/main.js": "1392d5e2f210aa13e2aab6c4d9ed822b82ed744d",
+  "src/maps.js": "e15c914301ed9a54198fca312e1787d232887543",
   "src/net.js": "8888d342e60dd95d72c68fc6be92bed593217d66",
   "src/player.js": "623be9918579b55e2ad0efc149c8e4b82f9d22ef",
   "src/room.js": "583f68c4a2e7932c5a65dda007a6beb788739c87",
@@ -21,9 +22,9 @@
   "src/sfx.js": "9b9be72f1d736e5e74b19bee29f9243a327a9861",
   "src/show.js": "0df1cd79ce65fa3927bbe1b73963c19327557fa6",
   "src/toon.js": "fe9ee79ec381f037b4453ced7efa4435c900fd6d",
-  "src/ui.js": "9eca7cd372fe6bf3ef489cf171da83fe429a75d5",
+  "src/ui.js": "899c3a7182ed2f79e11631bf69c9734382b590ea",
   "src/voice.js": "34ca5d942b4fca0c3dc3c688ec371450b6a9cda7",
-  "src/world.js": "ad2de687975b05eed7217a50e3f4782a7ab1f5dc",
+  "src/world.js": "66f66fc2031fdb82637da01e3160e80b53076306",
   "vendor/fonts/Anton-400-5f6ded.woff2": "2e308a053bbe923bc2e48fbf0b350db2989a4333",
   "vendor/fonts/Anton-400-7bc989.woff2": "e66dfabd5af3f8f564264a4c0c3974bf3c71e228",
   "vendor/fonts/BebasNeue-400-2b4f19.woff2": "c0320a87ee453b8ed78f0312c30056309b7c0d27",

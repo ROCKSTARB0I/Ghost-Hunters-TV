@@ -1,6 +1,7 @@
 // Menus: the title screen (big chunky logo + sticker buttons), the small
 // lobby overlay, settings, and the end-of-episode card.
 import { LOOKS } from './dude.js';
+import { MAPS } from './maps.js';
 import { SEGMENTS } from './show.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -163,6 +164,7 @@ export class UI {
       <button class="sticker small s2" id="l-invite">COPY INVITE</button>
       <button class="sticker small s3" id="l-watch">COPY WATCH LINK</button>
       <button class="sticker small s4" id="l-mic">${g.voice.mic ? 'MIC ON' : 'TURN ON MIC'}</button>
+      ${g.isDirector ? `<div class="len">MAP ${Object.entries(MAPS).map(([id, M]) => `<button class="mini ${(g.net.roster.settings?.map || 'diner') === id ? 'on' : ''}" data-map="${id}" title="${M.blurb}">${M.name.toUpperCase()}</button>`).join('')}</div>` : `<div class="len">MAP: ${(MAPS[g.net.roster.settings?.map] || MAPS.diner).name.toUpperCase()}</div>`}
       ${g.isDirector ? `<div class="len">SHOW LENGTH ${[6, 10, 15].map(n => `<button class="mini ${(g.net.roster.settings?.minutes || 10) === n ? 'on' : ''}" data-min="${n}">${n} MIN</button>`).join('')}</div>` : ''}
     </div>`);
     const base = location.origin + location.pathname;
@@ -172,6 +174,7 @@ export class UI {
     $('#l-watch', el).onclick = (e) => copy(`${base}?watch=${g.net.code}`, e.target);
     $('#l-mic', el).onclick = async (e) => { const ok = await g.voice.enableMic(); e.target.textContent = ok ? 'MIC ON' : 'MIC BLOCKED'; };
     el.querySelectorAll('[data-min]').forEach(b => b.onclick = () => { g.net.send({ t: 'settings', settings: { minutes: Number(b.dataset.min) } }); if (g.offline) g.net.roster.settings.minutes = Number(b.dataset.min); el.querySelectorAll('[data-min]').forEach(x => x.classList.toggle('on', x === b)); });
+    el.querySelectorAll('[data-map]').forEach(b => b.onclick = () => { const map = b.dataset.map; g.net.send({ t: 'settings', settings: { map } }); if (g.offline) g.net.roster.settings.map = map; g.sfx.click?.(); el.querySelectorAll('[data-map]').forEach(x => x.classList.toggle('on', x === b)); g.hud.toast(`Tonight's location: ${MAPS[map].name}. ${MAPS[map].blurb}`, 2600); });
     if (g.offline) { $('#l-invite', el).style.display = 'none'; $('#l-watch', el).style.display = 'none'; }
   }
 

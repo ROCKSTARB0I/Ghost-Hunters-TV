@@ -50,7 +50,7 @@ class Member:
 class Room:
     def __init__(self, code):
         self.code, self.members, self.director = code, {}, None
-        self.phase, self.settings = 'lobby', {'minutes': 12, 'location': 'harrow'}
+        self.phase, self.settings = 'lobby', {'minutes': 12, 'location': 'harrow', 'map': 'diner'}
         self.created = time.time()
 
     def crew(self): return [m for m in self.members.values() if m.kind == 'crew']
@@ -146,7 +146,7 @@ def handle(m, msg):
                 if want == 'crew' and r.director is None: r.director = m.id
                 r.send_all(r.roster())
         elif t == 'settings' and m.id == r.director:
-            r.settings.update({k: v for k, v in (msg.get('settings') or {}).items() if k in ('minutes', 'location', 'difficulty', 'camera', 'ghost', 'ghostType')})
+            r.settings.update({k: v for k, v in (msg.get('settings') or {}).items() if k in ('minutes', 'location', 'difficulty', 'camera', 'ghost', 'ghostType', 'map')})
             r.send_all(r.roster())
         elif t == 'phase' and m.id == r.director:
             r.phase = msg.get('phase', 'lobby')
